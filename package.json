@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "http-proxy": "latest",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "@3kmfi6hp/nodejs-proxy": "latest"
   }
 }
