@@ -1,16 +1,13 @@
-# 使用官方 Node.js 镜像作为基础镜像
-FROM node:lts-alpine3.18
-
-# 设置工作目录
+FROM deeplythink/basenode:16-alpine AS builder
 WORKDIR /app
 
-# 将应用程序文件复制到容器中
 COPY . .
-
-# EXPOSE 3000
-
-# 安装应用程序的依赖
+RUN npm config set registry https://registry.npmmirror.com
 RUN npm install
 
-# 设置默认的命令，即启动应用程序
-CMD ["npm", "start"]
+RUN pkg app.js -t node16-linux-x64 -o ./main
+
+FROM deeplythink/baseimage:jammy-1.0.2
+WORKDIR /home
+COPY --from=builder /app/main /home/main
+CMD [ "./main" ]
