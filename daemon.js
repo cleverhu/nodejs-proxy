@@ -1,21 +1,3 @@
-// const https = require('https');
-// const fs = require('fs');
-// const { spawn } = require('child_process');
-
-// // 启动并监视二进制文件
-// function startAndMonitorBinary(binaryPath) {
-//     let proc = spawn(binaryPath, ['run']);
-
-//     proc.on('exit', function () {
-//         console.log('Process exited. Restarting...');
-//         proc = spawn(binaryPath, ['run']);
-//     });
-// }
-
-// // 下载并启动二进制文件
-
-// startAndMonitorBinary('./myapp');
-
 const https = require('https');
 const fs = require('fs');
 const os = require('os');
@@ -70,9 +52,7 @@ function downloadBinary(url, dest, cb) {
 
 // 启动并监视二进制文件
 function startAndMonitorBinary(binaryPath) {
-
     let proc = spawn(binaryPath, ['run']);
-
     proc.on('exit', function () {
         console.log('Process exited. Restarting...');
         startAndMonitorBinary(binaryPath)
@@ -91,25 +71,25 @@ const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
 
 // 创建一个普通的HTTP服务器，用于处理WebSocket升级请求
-const server = http.createServer(function(req, res) {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('This server handles WebSocket requests');
+const server = http.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('This server handles WebSocket requests');
 });
 
 // 监听 'upgrade' 事件，处理WebSocket请求
-server.on('upgrade', function(req, socket, head) {
-  // 代理WebSocket请求到 localhost:3000
-  try{
-    proxy.ws(req, socket, head, {
-        target: 'ws://localhost:3000/',
-        ws: true
-      });
-  }catch(e){
-    console.log(e);
-  }
+server.on('upgrade', function (req, socket, head) {
+    // 代理WebSocket请求到 localhost:3000
+    try {
+        proxy.ws(req, socket, head, {
+            target: 'ws://localhost:3000/',
+            ws: true
+        });
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 // 监听端口，你可以根据需要更改端口号
-server.listen(8080, function() {
-  console.log('Proxy server listening on port 8080');
+server.listen(8080, function () {
+    console.log('Proxy server listening on port 8080');
 });
